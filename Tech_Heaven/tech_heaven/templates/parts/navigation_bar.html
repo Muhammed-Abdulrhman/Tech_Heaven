@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Haven - Your Technology Destination</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/themes.css' %}">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="top-bar">
+                <div class="logo">Tech<span>Haven</span></div>
+                
+                {% if user.is_authenticated %}
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for products...">
+                    <i class="fas fa-search"></i>
+                </div>
+                
+                <div class="user-actions">
+                    <div class="account-dropdown">
+                        <a href="#" class="account-link">
+                            <i class="far fa-user"></i>
+                            <span>{{ user.username }}</span>
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'logout' %}">Logout</a>
+                            <a href="#">Orders</a>
+                            <a href="{% url 'cart' %}">Cart</a>
+                        </div>
+                    </div>
+                    <a href="{% url 'cart' %}" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                        <span class="cart-count">3</span>
+                    </a>
+                    <button class="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if user.is_authenticated %}
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="{% url 'home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a></li>
+                    {% for category in categories %}
+                    <li><a href="{% url 'category' category.title %}" class="nav-link {% if request.path == category.get_absolute_url %}active{% endif %}">{{ category.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if user.is_authenticated %}
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <span class="close-btn" id="closeMobileMenu">&times;</span>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                {% for category in categories %}
+                <li><a href="{% url "category" category.title %}">{{ category.title }}</a></li>
+                {% endfor %}
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}{% endblock %}
+    
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const closeMobileMenu = document.getElementById('closeMobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.style.display = 'block';
+                });
+                
+                closeMobileMenu.addEventListener('click', function() {
+                    mobileMenu.style.display = 'none';
+                });
+                
+                // Close menu when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (e.target === mobileMenu) {
+                        mobileMenu.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Account dropdown functionality
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.querySelector('.dropdown-content').classList.toggle('show');
+                });
+                
+                // Close dropdown when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (!e.target.matches('.account-link') && !e.target.matches('.account-link *')) {
+                        const dropdowns = document.querySelectorAll('.dropdown-content');
+                        dropdowns.forEach(dropdown => {
+                            if (dropdown.classList.contains('show')) {
+                                dropdown.classList.remove('show');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

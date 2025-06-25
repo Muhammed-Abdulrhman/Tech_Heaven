@@ -1,0 +1,127 @@
+{% extends "../parts/navigation_bar.html" %}
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>YOUR TECH. YOUR WAY.</h1>
+                <p>Up to 30% off new arrivals</p>
+                <button class="btn btn-accent">Shop Now</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Categories Section -->
+    <section class="container">
+        <h2 class="section-title">SHOP BY CATEGORY</h2>
+        
+        <div class="categories">
+            {% for category in categories %}
+            <a href="{% url "category" category.title %}" class="category-card">
+                <div class="category-icon">
+                    <i class="{{category.link}}"></i>
+                </div>
+                <h3>{{category.title}}</h3>
+                <button class="btn btn-primary">Shop Now</button>
+            </a>
+            {% endfor %}
+        
+        </div>
+    </section>
+    
+    <!-- Products Section -->
+    <section class="container">
+        <h2 class="section-title">NEW ARRIVALS</h2>
+        
+        <div class="products">
+
+            {% for product in latest_products %}
+            <a href="{% url 'product' product.id %}" class="product-card">
+                <div class="product-image">
+                <img src="{{product.picture.url}}" alt="MacBook Pro">
+                <span class="product-badge">New</span>
+            </div>
+            <div class="product-info">
+                <h3 class="product-title">{{product.name}}</h3>
+                <div class="product-price">
+                    {% if product.discount == 0 %}
+                        <span class="current-price">${{product.price}}</span>
+                    {% else %}
+                        <span class="original-price">${{product.price}}</span>
+                        <span class="current-price">${{ product.final_price }}</span>
+                    {% endif %}
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+            </div>
+            </a>
+            {% endfor %}
+
+
+        </div>
+    </section>
+    {% comment %} <section class="container">
+        <div class="deal-section">
+            <div class="deal-header">
+                <h2>DEAL OF THE DAY</h2>
+                <div class="deal-timer">
+                    <div class="timer-box">
+                        <div class="timer-value">24</div>
+                        <div class="timer-label">Hours</div>
+                    </div>
+                    <div class="timer-box">
+                        <div class="timer-value">00</div>
+                        <div class="timer-label">Minutes</div>
+                    </div>
+                    <div class="timer-box">
+                        <div class="timer-value">00</div>
+                        <div class="timer-label">Seconds</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="deal-content">
+                <div class="deal-image">
+                    <img src="https://m.media-amazon.com/images/I/71S8sK0yQhL._AC_SL1500_.jpg" alt="Deal Product">
+                </div>
+                <div class="deal-details">
+                    <h3 class="deal-title">Samsung Galaxy Tab S8 Ultra 14.6" 256GB</h3>
+                    <div class="deal-price">
+                        <span class="current-price">$999.00</span>
+                        <span class="original-price">$1,199.00</span>
+                        <span>(17% off)</span>
+                    </div>
+                    <p class="deal-description">
+                        Experience the ultimate tablet with the Samsung Galaxy Tab S8 Ultra. 
+                        Featuring a massive 14.6" display, S Pen included, and powerful 
+                        performance for work and play.
+                    </p>
+                    <div class="deal-buttons">
+                        <button class="btn btn-accent">Add to Cart</button>
+                        <button class="btn btn-primary">Quick View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>STAY CONNECTED</h2>
+            <p>Get the latest tech news and exclusive offers delivered straight to your inbox</p>
+            <form class="newsletter-form" method="POST" action="/subscribe">
+                <input type="email" name="email" placeholder="Enter your email address" required>
+                <button type="submit" class="btn btn-accent">Subscribe</button>
+            </form>
+        </div>
+    </section> {% endcomment %}
+{% endblock %}
+
+{% block footer %}
+    {% include "../parts/footer.html" %}
+{% endblock %}

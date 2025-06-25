@@ -1,0 +1,37 @@
+/* Dark Theme Variables */
+.dark-theme {
+    --bg-light: #121212;
+    --white: #1e1e1e;
+    --text-dark: #e0e0e0;
+    --text-light: #9e9e9e;
+    --gray-light: #333;
+    --gray-dark: #ddd;
+}
+
+/* Dark Theme Specific Styles */
+.dark-theme header {
+    background-color: var(--white);
+    border-bottom: 1px solid #333;
+}
+
+.dark-theme .search-bar input {
+    background-color: #333;
+    color: white;
+    border-color: #444;
+}
+
+.dark-theme .auth-container,
+.dark-theme .product-card,
+.dark-theme .category-card {
+    background-color: var(--white);
+    border: 1px solid #333;
+}
+
+.dark-theme .original-price,
+.dark-theme .password-hint {
+    color: var(--text-light);
+}
+
+.dark-theme .theme-toggle {
+    color: var(--text-dark);
+}

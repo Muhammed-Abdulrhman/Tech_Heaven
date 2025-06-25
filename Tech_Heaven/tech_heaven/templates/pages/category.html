@@ -1,0 +1,86 @@
+{% extends "../parts/navigation_bar.html" %}
+{% block content %}
+
+    <section class="category-banner">
+        <div class="container">
+            <br>
+            <h1>{{ category.title }}</h1>
+            <br>
+            <p>{{ category.description|default:"Powerful machines for work and play" }}</p>
+        </div>
+    </section>
+    <br><br>
+    <section class="container">
+        
+        <div class="products">
+            {% for product in category_products %}
+            <a href="{% url 'product' product.id %}" class="product-card">
+                <div class="product-image">
+                    <img src="{{ product.picture.url }}" alt="{{ product.name }}">
+                    {% if product.is_new %}
+                    <span class="product-badge">New</span>
+                    {% endif %}
+                    {% if product.discount > 0 %}
+                    <span class="discount-badge">-{{ product.discount }}%</span>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">{{ product.name }}</h3>
+                    <div class="product-price">
+                        {% if product.discount > 0 %}
+                            <span class="current-price">${{ product.final_price }}</span>
+                            <span class="original-price">${{ product.price }}</span>
+                        {% else %}
+                            <span class="current-price">${{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-rating">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= product.average_rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span>({{ product.review_count }})</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="no-products">
+                <p>No products found in this category.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if category_products.has_other_pages %}
+        <div class="pagination">
+            {% if category_products.has_previous %}
+                <a href="?page={{ category_products.previous_page_number }}" class="page-link">&laquo; Previous</a>
+            {% endif %}
+            
+            {% for i in category_products.paginator.page_range %}
+                {% if category_products.number == i %}
+                    <span class="current-page">{{ i }}</span>
+                {% else %}
+                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+            
+            {% if category_products.has_next %}
+                <a href="?page={{ category_products.next_page_number }}" class="page-link">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </section>
+
+{% endblock %}
+{% block footer %}
+    {% include "../parts/footer.html" %}
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "../parts/navigation_bar.html" %}
+{% block content %}
+<style>
+    .cart-page {
+        padding: 40px 0;
+    }
+    
+    .cart-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .cart-items {
+        flex: 2;
+        min-width: 300px;
+    }
+    
+    .cart-summary {
+        flex: 1;
+        background-color: var(--bg-light);
+        padding: 20px;
+        border-radius: 8px;
+        height: fit-content;
+    }
+    
+    .cart-item {
+        display: flex;
+        gap: 20px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .cart-item-image {
+        width: 120px;
+        height: 120px;
+        background-color: var(--bg-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+    
+    .cart-item-image img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+    }
+    
+    .cart-item-details {
+        flex: 1;
+    }
+    
+    .cart-item-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--text-color);
+    }
+    
+    .cart-item-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .quantity-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--border-color);
+        background: none;
+        cursor: pointer;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .quantity-input {
+        width: 50px;
+        height: 30px;
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        border-left: none;
+        border-right: none;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .remove-item {
+        color: var(--accent);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    
+    .cart-summary h3 {
+        margin-bottom: 20px;
+        font-size: 20px;
+        color: var(--text-color);
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    
+    .summary-total {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 20px 0;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .checkout-btn {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 50px 0;
+    }
+    
+    .empty-cart i {
+        font-size: 50px;
+        color: var(--text-light);
+        margin-bottom: 20px;
+    }
+    
+    .empty-cart p {
+        margin-bottom: 20px;
+        color: var(--text-light);
+    }
+    
+    @media (max-width: 768px) {
+        .cart-container {
+            flex-direction: column;
+        }
+        
+        .cart-item {
+            flex-direction: column;
+        }
+        
+        .cart-item-image {
+            width: 100%;
+            height: 200px;
+        }
+    }
+</style>
+
+<section class="cart-page container">
+    <h1>Your Shopping Cart</h1>
+    
+    <div class="cart-container">
+        <div class="cart-items">
+            {% if cart %}
+                {% for item in cart %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <img src="{{ item.product.picture.url }}" alt="{{ item.product.name }}">
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title">{{ item.product.name }}</h3>
+                        <div class="cart-item-price">$ {{item.total_price}}</div>
+                        
+                            {% csrf_token %}
+                            <div class="quantity-selector">
+                                <p>{{ item.quantity }}</p>
+                            </div>
+                        
+                            <a href="{% url 'delete_cart_item' item.id %}" class="remove-item" onclick="return confirm('Remove this item from cart?');">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if cart %}
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span>${{ total }}</span>
+            </div>
+            
+            <a href="" class="btn btn-accent checkout-btn">Proceed to Checkout</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
+{% block footer %}
+    {% include "../parts/footer.html" %}
+{% endblock %}
